@@ -3,6 +3,13 @@
 All Prompt Atlas public contract changes are recorded here. Entries state
 validation changes, migration impact, and identifier impact.
 
+## Generated artifact search CLI - 2026-08-28
+
+- Added a standard-library CLI for direct id, model, style, category, and
+  prompt searches over the committed generated artifacts.
+- Migration impact: none.
+- Identifier impact: none.
+
 ## CI validation - 2026-08-28
 
 - Added pull-request and main-branch validation for contract gates, malformed
