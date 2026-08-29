@@ -1,0 +1,92 @@
+name: Validate
+
+"on":
+  pull_request:
+  push:
+    branches:
+      - main
+
+permissions:
+  contents: read
+
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    env:
+      PYTHONDONTWRITEBYTECODE: "1"
+    steps:
+      - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683
+
+      - name: Show runner Python version
+        run: python3 --version
+
+      - name: Check contract gates and generated artifacts
+        shell: bash
+        run: |
+          set -eu
+
+          run_success() {
+            if output=$("$@" 2>&1); then
+              status=0
+            else
+              status=$?
+            fi
+            printf '%s\n' "$output"
+            case "$output" in
+              *Traceback*) exit 1 ;;
+            esac
+            [ "$status" -eq 0 ] || exit "$status"
+          }
+
+          assert_refusal() {
+            expected=$1
+            shift
+            if output=$("$@" 2>&1); then
+              status=0
+            else
+              status=$?
+            fi
+            printf '%s\n' "$output"
+            case "$output" in
+              *Traceback*) exit 1 ;;
+              *"$expected"*) ;;
+              *) exit 1 ;;
+            esac
+            [ "$status" -eq 1 ] || exit 1
+          }
+
+          run_success python3 -B check_contract.py fixtures/valid.json
+          assert_refusal "rights gate" python3 -B check_contract.py fixtures/invalid-rights.json
+          assert_refusal "prompt visibility gate" python3 -B check_contract.py fixtures/invalid-prompt-visibility.json
+          assert_refusal "provenance gate" python3 -B check_contract.py fixtures/invalid-provenance.json
+          assert_refusal "creator attribution gate" python3 -B check_contract.py fixtures/invalid-creator-attribution.json
+          assert_refusal "permanent destination gate" python3 -B check_contract.py fixtures/invalid-destination.json
+          run_success python3 -B generate.py --check
+
+      - name: Check malformed destination refusal
+        shell: bash
+        run: |
+          set -eu
+          probe="$RUNNER_TEMP/malformed-destination.json"
+          python3 -B - "$probe" <<'PY'
+          import json
+          import sys
+          from pathlib import Path
+
+          record = json.loads(Path("fixtures/valid.json").read_text(encoding="utf-8"))
+          record["destination"]["url"] = "https://[::1"
+          Path(sys.argv[1]).write_text(json.dumps(record), encoding="utf-8")
+          PY
+
+          if output=$(python3 -B generate.py "$probe" 2>&1); then
+            status=0
+          else
+            status=$?
+          fi
+          printf '%s\n' "$output"
+          case "$output" in
+            *Traceback*) exit 1 ;;
+            *"population guard (malformed destination URL)"*) ;;
+            *) exit 1 ;;
+          esac
+          [ "$status" -ne 0 ] || exit 1

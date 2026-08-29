@@ -3,6 +3,13 @@
 All Prompt Atlas public contract changes are recorded here. Entries state
 validation changes, migration impact, and identifier impact.
 
+## CI validation - 2026-08-28
+
+- Added pull-request and main-branch validation for contract gates, malformed
+  destination refusal, and deterministic generated artifacts.
+- Migration impact: none.
+- Identifier impact: none.
+
 ## Public tree status-leading copy fix - 2026-08-28
 
 - Led the README opening with pre-launch status so it remains clear when truncated.
