@@ -1,0 +1,42 @@
+{
+  "schemaVersion": "1.0.0",
+  "id": "atlas_ca5959ef6b7c6a4f31cc",
+  "slug": "paper-orbit-study",
+  "title": "Paper Orbit Study",
+  "image": {
+    "previewUrl": "https://atlas-synthetic.invalid/synthetic-assets/paper-orbit-study.webp",
+    "width": 1024,
+    "height": 1024
+  },
+  "prompt": {
+    "text": "An invented paper planet with cobalt rings on a warm studio backdrop.",
+    "visibility": "approved"
+  },
+  "model": {
+    "provider": "Example Labs",
+    "name": "Example Image Model",
+    "version": "synthetic-v1"
+  },
+  "tags": {
+    "categories": ["editorial-illustration"],
+    "styles": ["paper-craft", "minimal"]
+  },
+  "creator": {
+    "name": "Avery Example",
+    "profileUrl": "https://atlas-synthetic.invalid/creators/avery-example"
+  },
+  "provenance": {
+    "kind": "original",
+    "sourceLabel": "Synthetic contract fixture"
+  },
+  "rights": {
+    "status": "cleared",
+    "clearanceBasis": "creator-owned",
+    "evidenceUrl": "https://atlas-synthetic.invalid/synthetic-rights/paper-orbit-study"
+  },
+  "destination": {
+    "url": "https://atlas-synthetic.invalid/cases/paper-orbit-study",
+    "permanent": true
+  },
+  "license": "CC-BY-4.0"
+}

@@ -1,0 +1,141 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://atlas-synthetic.invalid/schemas/prompt-atlas/case-1.0.0.schema.json",
+  "title": "Artinspire Prompt Atlas public case",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schemaVersion",
+    "id",
+    "slug",
+    "title",
+    "image",
+    "prompt",
+    "model",
+    "tags",
+    "creator",
+    "provenance",
+    "rights",
+    "destination",
+    "license"
+  ],
+  "properties": {
+    "schemaVersion": { "const": "1.0.0" },
+    "id": { "type": "string", "pattern": "^atlas_[0-9a-f]{20}$" },
+    "slug": {
+      "type": "string",
+      "pattern": "^[a-z0-9]+(?:-[a-z0-9]+)*$"
+    },
+    "title": { "type": "string", "minLength": 1 },
+    "image": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["previewUrl", "width", "height"],
+      "properties": {
+        "previewUrl": { "$ref": "#/$defs/httpsUrl" },
+        "width": { "type": "integer", "minimum": 1 },
+        "height": { "type": "integer", "minimum": 1 }
+      }
+    },
+    "prompt": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["text", "visibility"],
+      "properties": {
+        "text": { "type": "string", "minLength": 1 },
+        "visibility": { "const": "approved" }
+      }
+    },
+    "model": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["provider", "name", "version"],
+      "properties": {
+        "provider": { "type": "string", "minLength": 1 },
+        "name": { "type": "string", "minLength": 1 },
+        "version": { "type": "string", "minLength": 1 }
+      }
+    },
+    "tags": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["categories", "styles"],
+      "properties": {
+        "categories": {
+          "type": "array",
+          "minItems": 1,
+          "uniqueItems": true,
+          "items": { "$ref": "#/$defs/tag" }
+        },
+        "styles": {
+          "type": "array",
+          "minItems": 1,
+          "uniqueItems": true,
+          "items": { "$ref": "#/$defs/tag" }
+        }
+      }
+    },
+    "creator": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["name", "profileUrl"],
+      "properties": {
+        "name": { "type": "string", "minLength": 1 },
+        "profileUrl": {
+          "type": "string",
+          "format": "uri",
+          "pattern": "^https://atlas-synthetic\\.invalid/[a-z0-9]+(?:[/-][a-z0-9]+)*$"
+        }
+      }
+    },
+    "provenance": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["kind", "sourceLabel", "sourceUrl"],
+      "properties": {
+        "kind": { "enum": ["original", "authorized-remix"] },
+        "sourceLabel": { "type": "string", "minLength": 1 },
+        "sourceUrl": { "$ref": "#/$defs/httpsUrl" }
+      }
+    },
+    "rights": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["status", "clearanceBasis", "evidenceUrl"],
+      "properties": {
+        "status": { "const": "cleared" },
+        "clearanceBasis": {
+          "enum": ["creator-owned", "licensed", "public-domain"]
+        },
+        "evidenceUrl": { "$ref": "#/$defs/httpsUrl" }
+      }
+    },
+    "destination": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["url", "permanent"],
+      "properties": {
+        "url": {
+          "type": "string",
+          "format": "uri",
+          "pattern": "^https://atlas-synthetic\\.invalid/[a-z0-9]+(?:[/-][a-z0-9]+)*$"
+        },
+        "permanent": { "const": true }
+      }
+    },
+    "license": {
+      "enum": ["CC0-1.0", "CC-BY-4.0", "CC-BY-SA-4.0"]
+    }
+  },
+  "$defs": {
+    "httpsUrl": {
+      "type": "string",
+      "format": "uri",
+      "pattern": "^https://"
+    },
+    "tag": {
+      "type": "string",
+      "pattern": "^[a-z0-9]+(?:-[a-z0-9]+)*$"
+    }
+  }
+}
